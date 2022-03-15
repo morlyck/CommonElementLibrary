@@ -220,6 +220,12 @@ namespace CommonElement
         public bool Exists(string variableName) {
             return Exists(typeof(string), variableName);
         }
+        public bool Remove(string variableName) {
+            return Remove(typeof(string), variableName);
+        }
+        public void RemoveAll(string variableName) {
+            RemoveAll(typeof(string), variableName);
+        }
         #endregion
 
         #region(object)
@@ -285,6 +291,23 @@ namespace CommonElement
 
             return returnValue;
         }
+        public bool Remove(Type type, string variableName) {
+            if (upstairEnvironment == null || !upstairEnvironment.MultiBand) return GetDataHolder(type.AssemblyQualifiedName).Remove(variableName);
+            
+            bool returnValue = false;
+            upstairEnvironment.MultiBandDataHolderAll_Break(type.AssemblyQualifiedName, (dataHolder) => {
+                //一つでもtrueがあるとループを切り上げる
+                if (!dataHolder.Remove(variableName)) return true;
+
+                returnValue = true;
+                return false;
+            });
+
+            return returnValue;
+        }
+        public void RemoveAll(Type type, string variableName) {
+            do { } while (Remove(type, variableName));
+        }
         #endregion
 
         public DataType? GetValue<DataType>(string variableName) {
@@ -298,6 +321,12 @@ namespace CommonElement
         }
         public bool Exists<DataType>(string variableName) {
             return Exists(typeof(DataType), variableName);
+        }
+        public bool Remove<DataType>(string variableName) {
+            return Remove(typeof(DataType), variableName);
+        }
+        public void RemoveAll<DataType>(string variableName) {
+            RemoveAll(typeof(DataType), variableName);
         }
 
         #region(string)
@@ -448,6 +477,7 @@ namespace CommonElement
         bool SetValue(bool multiBandAccess, string variableName, object value);
         void CreateOrSetValue_Local(string variableName, object value);
         bool Exists(string variableName);
+        bool Remove(string variableName);
         //
         void Down(List<string> returnValues, List<string> arguments);
         void PullArguments(List<string> variables);
@@ -656,6 +686,44 @@ namespace CommonElement
             if (floorDataFrames[nowFloorNo].Variables.ContainsKey(variableName)) return true;
 
             return exists(variableName, nowFloorNo);
+        }
+        public bool Remove(string variableName) {
+            if (currentFloor.Variables.ContainsKey(variableName)) {
+                currentFloor.Variables.Remove(variableName);
+                return true;
+            }
+
+            return _Remove(variableName);
+        }
+        bool _Remove(string variableName, bool lowerboundAccess = false, int _connectionFloorNo = 0, bool _looseConnection = false) {
+            //フロアナンバーの決定
+            int floorNo;
+            if (!lowerboundAccess || _looseConnection) {
+                floorNo = currentFloorNo;
+            } else {
+                if (currentFloorNo < _connectionFloorNo) throw new ChainEnvironment.MisalignedConnectionFloorNoException("指定されたコネクションフロアナンバーに該当する階層がない");
+                floorNo = _connectionFloorNo;
+            }
+
+            return remove(variableName, floorNo + 1);
+        }
+        bool remove(string variableName, int floorNo) {
+            int nowFloorNo = floorNo - 1;
+
+            //if (nowFloorNo < 0) //return false;
+            if (nowFloorNo < 0) {
+                //上位環境が設定されていない場合はfalseを返す
+                if (upstairEnvironment == null) return false;
+
+                //上位環境での確認を続行する
+                return upstairEnvironment._Remove(variableName, true, connectionFloorNo, looseConnection);
+            }
+            if (floorDataFrames[nowFloorNo].Variables.ContainsKey(variableName)) {
+                floorDataFrames[nowFloorNo].Variables.Remove(variableName);
+                return true;
+            }
+
+            return remove(variableName, nowFloorNo);
         }
 
         public void Down(List<string> returnValues = null, List<string> arguments = null) {
