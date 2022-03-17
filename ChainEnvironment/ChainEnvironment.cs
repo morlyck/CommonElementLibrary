@@ -237,12 +237,12 @@ namespace CommonElement
             upstairEnvironment.MultiBandDataHolderAll_Break(type.AssemblyQualifiedName ,(dataHolder) => {
                 var result = dataHolder.GetValue(true, variableName);
                 //値が取得できると戻り値をセットしてループを切り上げる
-                if (result.Item2) {
-                    returnValue = result.Item1;
-                    get = true;
-                    return false;
-                }
-                return true;
+                if (!result.Item2) return true;
+
+                returnValue = result.Item1;
+                get = true;
+                return false;
+
             });
 
             //どの上位環境でも値を取得できなかった場合
@@ -280,13 +280,11 @@ namespace CommonElement
             
             bool returnValue = false;
             upstairEnvironment.MultiBandDataHolderAll_Break(type.AssemblyQualifiedName, (dataHolder) => {
-                var result = dataHolder.Exists(variableName);
                 //一つでもtrueがあるとループを切り上げる
-                if (result) {
-                    returnValue = true;
-                    return false;
-                }
-                return true;
+                if (!dataHolder.Exists(variableName)) return true;
+
+                returnValue = true;
+                return false;
             });
 
             return returnValue;
