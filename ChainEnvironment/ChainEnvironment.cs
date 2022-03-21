@@ -208,6 +208,13 @@ namespace CommonElement
                 }
             }
         }
+
+        //------------
+        public void ClearOnlyLocal() {
+            dataHolders.Clear();
+        }
+
+
         #region(string)
         public string GetValue(string variableName) {
             return GetValue(typeof(string), variableName) as string;
