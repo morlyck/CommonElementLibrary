@@ -31,7 +31,7 @@ namespace CommonElement
     public class MultiBandUpstairEnvironment: IUpstairEnvironment
     {
         ChainEnvironment targetEnvironment = null;
-        ChainEnvironment TargetEnvironment {
+        public ChainEnvironment TargetEnvironment {
             get => targetEnvironment;
             set {
                 //一度に割り当てれるターゲット環境は一つまで
@@ -92,6 +92,7 @@ namespace CommonElement
         public string Serialize(CommonElement.ISerializerAndDeserializer serializer) {
             ChainEnvironmentSdReady sdReady = new ChainEnvironmentSdReady();
             foreach (KeyValuePair<string, IChainEnvironmentDataHolder> dataHolderData in dataHolders) {
+                Debug.WriteLine(dataHolderData.Key);
                 sdReady.TypeNames.Add(dataHolderData.Key);
                 sdReady.SerializeText.Add(dataHolderData.Value.Serialize(serializer));
             }
@@ -230,7 +231,9 @@ namespace CommonElement
 
         #region(object)
         public object GetValue(Type type, string variableName) {
-            if (upstairEnvironment == null || !upstairEnvironment.MultiBand) return GetDataHolder(type.AssemblyQualifiedName).GetValue(false, variableName).Item1;
+            var result = GetDataHolder(type.AssemblyQualifiedName).GetValue(false, variableName);
+
+            if (result.Item2 || (upstairEnvironment == null || !upstairEnvironment.MultiBand)) return result.Item1;
 
             object returnValue = null;
             bool get = false;
@@ -251,10 +254,8 @@ namespace CommonElement
             return returnValue;
         }
         public object SetValue(Type type, string variableName, object value) {
-            if (upstairEnvironment == null || !upstairEnvironment.MultiBand) {
-                GetDataHolder(type.AssemblyQualifiedName).SetValue(false, variableName, value);
-                return value;
-            }
+            var result = GetDataHolder(type.AssemblyQualifiedName).SetValue(false, variableName, value);
+            if (result || (upstairEnvironment == null || !upstairEnvironment.MultiBand)) return value;
 
             bool set = false;
             upstairEnvironment.MultiBandDataHolderAll_Break(type.AssemblyQualifiedName, (dataHolder) => {
@@ -272,11 +273,13 @@ namespace CommonElement
             return value;
         }
         public object CreateOrSetValue_Local(Type type, string variableName, object value) {
+            Debug.WriteLine($"TypeName:{type.AssemblyQualifiedName}");
             GetDataHolder(type.AssemblyQualifiedName).CreateOrSetValue_Local(variableName, value);
             return value;
         }
         public bool Exists(Type type, string variableName) {
-            if (upstairEnvironment == null || !upstairEnvironment.MultiBand) return GetDataHolder(type.AssemblyQualifiedName).Exists(variableName);
+            var result = GetDataHolder(type.AssemblyQualifiedName).Exists(variableName);
+            if (result || (upstairEnvironment == null || !upstairEnvironment.MultiBand)) return result;
             
             bool returnValue = false;
             upstairEnvironment.MultiBandDataHolderAll_Break(type.AssemblyQualifiedName, (dataHolder) => {
@@ -290,7 +293,8 @@ namespace CommonElement
             return returnValue;
         }
         public bool Remove(Type type, string variableName) {
-            if (upstairEnvironment == null || !upstairEnvironment.MultiBand) return GetDataHolder(type.AssemblyQualifiedName).Remove(variableName);
+            var result = GetDataHolder(type.AssemblyQualifiedName).Remove(variableName);
+            if (result || (upstairEnvironment == null || !upstairEnvironment.MultiBand)) return result;
             
             bool returnValue = false;
             upstairEnvironment.MultiBandDataHolderAll_Break(type.AssemblyQualifiedName, (dataHolder) => {
