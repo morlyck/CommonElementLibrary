@@ -89,7 +89,7 @@ namespace CommonElement
             }
         }
         //シリアライズ対応
-        public string Serialize(CommonElement.ISerializerAndDeserializer serializer) {
+        public string Serialize(ISerializerAndDeserializer serializer) {
             ChainEnvironmentSdReady sdReady = new ChainEnvironmentSdReady();
             foreach (KeyValuePair<string, IChainEnvironmentDataHolder> dataHolderData in dataHolders) {
                 Debug.WriteLine(dataHolderData.Key);
@@ -101,7 +101,7 @@ namespace CommonElement
         }
 
         //デシリアライズ対応
-        public void Deserialize(CommonElement.ISerializerAndDeserializer deserializer, string text) {
+        public void Deserialize(ISerializerAndDeserializer deserializer, string text) {
             ChainEnvironmentSdReady sdReady = deserializer.Deserialize<ChainEnvironmentSdReady>(text);
             for(int count = 0; count < sdReady.TypeNames.Count; count++) {
                 string typeName = sdReady.TypeNames[count];
@@ -280,7 +280,6 @@ namespace CommonElement
             return value;
         }
         public object CreateOrSetValue_Local(Type type, string variableName, object value) {
-            Debug.WriteLine($"TypeName:{type.AssemblyQualifiedName}");
             GetDataHolder(type.AssemblyQualifiedName).CreateOrSetValue_Local(variableName, value);
             return value;
         }
@@ -475,8 +474,8 @@ namespace CommonElement
     }
 
     public interface IChainEnvironmentDataHolder {
-        string Serialize(CommonElement.ISerializerAndDeserializer serializer);
-        void Deserialize(CommonElement.ISerializerAndDeserializer deserializer, string text);
+        string Serialize(ISerializerAndDeserializer serializer);
+        void Deserialize(ISerializerAndDeserializer deserializer, string text);
         //---
         IChainEnvironmentOrdertaker? Ordertaker { get; set; }
         void SetUpstairEnvironment(IChainEnvironmentDataHolder upstairEnvironment, bool looseConnection, int connectionFloorNo);
@@ -514,7 +513,7 @@ namespace CommonElement
     {
         public IChainEnvironmentOrdertaker? Ordertaker { get; set; } = null;
         //シリアライズ対応
-        public string Serialize(CommonElement.ISerializerAndDeserializer serializer) {
+        public string Serialize(ISerializerAndDeserializer serializer) {
             ChainEnvironmentDataHolderSdReady<DataType> sdReady = new ChainEnvironmentDataHolderSdReady<DataType>();
             sdReady.floorDataFrames = floorDataFrames;
             sdReady.currentFloorNo = CurrentFloorNo;
@@ -523,7 +522,7 @@ namespace CommonElement
         }
 
         //デシリアライズ対応
-        public void Deserialize(CommonElement.ISerializerAndDeserializer deserializer, string text) {
+        public void Deserialize(ISerializerAndDeserializer deserializer, string text) {
             ChainEnvironmentDataHolderSdReady<DataType> sdReady = deserializer.Deserialize<ChainEnvironmentDataHolderSdReady<DataType>>(text);
 
             floorDataFrames = sdReady.floorDataFrames;
