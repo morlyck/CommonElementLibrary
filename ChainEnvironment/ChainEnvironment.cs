@@ -74,7 +74,7 @@ namespace CommonElement
             targetEnvironment.SetUpstairEnvironment_LooseConnection(this);
         }
     }
-    public class ChainEnvironment: IUpstairEnvironment
+    public class ChainEnvironment: IUpstairEnvironment, ICustomSerialize
     {
         public bool MultiBand { get => false; 
         }
@@ -509,7 +509,7 @@ namespace CommonElement
 
         //public Dictionary<string, List<string>> Lists = new Dictionary<string, List<string>>();
     }
-    public class ChainEnvironmentDataHolder<DataType>: IChainEnvironmentDataHolder
+    public class ChainEnvironmentDataHolder<DataType>: IChainEnvironmentDataHolder, ICustomSerialize
     {
         public IChainEnvironmentOrdertaker? Ordertaker { get; set; } = null;
         //シリアライズ対応
