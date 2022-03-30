@@ -8,6 +8,14 @@ using System.Diagnostics;
 
 namespace CommonElement
 {
+    ///汎用的な環境を提供するクラス群
+    ///主な機能
+    ///・名前を指定して値を取得
+    ///・名前を指定して値を格納
+    ///・指定した名前の変数がすでにあるか確認する
+    ///・スコープを一段深くする
+    ///・スコープを一段上がる
+    ///・環境同士をつなげる
     public interface IChainEnvironmentOrdertaker
     {
         //イベントの発火
