@@ -508,6 +508,14 @@ namespace CommonElement
 
         public int currentFloorNo = 0;
     }
+    public class FloorDataFrameSdReady
+    {
+        public Dictionary<string, string> Variables = new Dictionary<string, string>();
+        public Dictionary<string, string> Variables_ICustomSerialize = new Dictionary<string, string>();
+        public List<string> Arguments = new List<string>();
+        public List<string> ReturnValues = new List<string>();
+
+    }
     public class FloorDataFrame<DataType>
     {
         public Dictionary<string, DataType> Variables = new Dictionary<string, DataType>();
