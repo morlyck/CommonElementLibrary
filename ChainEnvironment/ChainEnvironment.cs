@@ -523,7 +523,39 @@ namespace CommonElement
         public List<string> Arguments = new List<string>();
         public List<string> ReturnValues = new List<string>();
 
-        //public Dictionary<string, List<string>> Lists = new Dictionary<string, List<string>>();
+        //シリアライズ対応
+        public string Serialize(ISerializerAndDeserializer serializer) {
+            FloorDataFrameSdReady sdReady = new FloorDataFrameSdReady();
+            sdReady.Arguments = Arguments;
+            sdReady.ReturnValues = ReturnValues;
+
+            foreach (var variableData in Variables) {
+                if(variableData.Value is ICustomSerialize) {
+                    sdReady.Variables_ICustomSerialize.Add(variableData.Key, (variableData.Value as ICustomSerialize).Serialize(serializer));
+                } else {
+                    sdReady.Variables.Add(variableData.Key, serializer.Serialize(variableData.Value));
+                }
+            }
+
+            return serializer.Serialize(sdReady);
+        }
+
+        //デシリアライズ対応
+        public void Deserialize(ISerializerAndDeserializer deserializer, string text) {
+            FloorDataFrameSdReady sdReady = deserializer.Deserialize<FloorDataFrameSdReady>(text);
+
+            Arguments = sdReady.Arguments;
+            ReturnValues = sdReady.ReturnValues;
+
+            foreach (var variablesData in sdReady.Variables) {
+                Variables.Add(variablesData.Key, (DataType)deserializer.Deserialize(typeof(DataType), variablesData.Value));
+            }
+            foreach (var variablesData in sdReady.Variables_ICustomSerialize) {
+                DataType data = (DataType)Activator.CreateInstance(typeof(DataType));
+                (data as ICustomSerialize).Deserialize(deserializer, variablesData.Value);
+                Variables.Add(variablesData.Key, data);
+            }
+        }
     }
     public class ChainEnvironmentDataHolder<DataType>: IChainEnvironmentDataHolder, ICustomSerialize
     {
