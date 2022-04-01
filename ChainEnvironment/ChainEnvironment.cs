@@ -511,7 +511,6 @@ namespace CommonElement
     public class FloorDataFrameSdReady
     {
         public Dictionary<string, string> Variables = new Dictionary<string, string>();
-        public Dictionary<string, string> Variables_ICustomSerialize = new Dictionary<string, string>();
         public List<string> Arguments = new List<string>();
         public List<string> ReturnValues = new List<string>();
 
@@ -529,10 +528,13 @@ namespace CommonElement
             sdReady.Arguments = Arguments;
             sdReady.ReturnValues = ReturnValues;
 
-            foreach (var variableData in Variables) {
-                if(variableData.Value is ICustomSerialize) {
-                    sdReady.Variables_ICustomSerialize.Add(variableData.Key, (variableData.Value as ICustomSerialize).Serialize(serializer));
-                } else {
+
+            if (typeof(DataType) is ICustomSerialize) {
+                foreach (var variableData in Variables) {
+                    sdReady.Variables.Add(variableData.Key, (variableData.Value as ICustomSerialize).Serialize(serializer));
+                }
+            } else {
+                foreach (var variableData in Variables) {
                     sdReady.Variables.Add(variableData.Key, serializer.Serialize(variableData.Value));
                 }
             }
@@ -547,14 +549,18 @@ namespace CommonElement
             Arguments = sdReady.Arguments;
             ReturnValues = sdReady.ReturnValues;
 
-            foreach (var variablesData in sdReady.Variables) {
-                Variables.Add(variablesData.Key, (DataType)deserializer.Deserialize(typeof(DataType), variablesData.Value));
+            if (typeof(DataType) is ICustomSerialize) {
+                foreach (var variablesData in sdReady.Variables) {
+                    DataType data = (DataType)Activator.CreateInstance(typeof(DataType));
+                    (data as ICustomSerialize).Deserialize(deserializer, variablesData.Value);
+                    Variables.Add(variablesData.Key, data);
+                }
+            } else {
+                foreach (var variablesData in sdReady.Variables) {
+                    Variables.Add(variablesData.Key, (DataType)deserializer.Deserialize(typeof(DataType), variablesData.Value));
+                }
             }
-            foreach (var variablesData in sdReady.Variables_ICustomSerialize) {
-                DataType data = (DataType)Activator.CreateInstance(typeof(DataType));
-                (data as ICustomSerialize).Deserialize(deserializer, variablesData.Value);
-                Variables.Add(variablesData.Key, data);
-            }
+
         }
     }
     public class ChainEnvironmentDataHolder<DataType>: IChainEnvironmentDataHolder, ICustomSerialize
