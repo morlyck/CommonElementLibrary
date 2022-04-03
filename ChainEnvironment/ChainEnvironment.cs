@@ -504,7 +504,7 @@ namespace CommonElement
     }
     public class ChainEnvironmentDataHolderSdReady<DataType> 
     {
-        public List<FloorDataFrame<DataType>> floorDataFrames = null;
+        public List<string> floorDataFrameTexts = new List<string>();
 
         public int currentFloorNo = 0;
     }
@@ -569,7 +569,9 @@ namespace CommonElement
         //シリアライズ対応
         public string Serialize(ISerializerAndDeserializer serializer) {
             ChainEnvironmentDataHolderSdReady<DataType> sdReady = new ChainEnvironmentDataHolderSdReady<DataType>();
-            sdReady.floorDataFrames = floorDataFrames;
+            foreach( var floorDataFrame in floorDataFrames) {
+                sdReady.floorDataFrameTexts.Add(floorDataFrame.Serialize(serializer));
+            }
             sdReady.currentFloorNo = CurrentFloorNo;
 
             return serializer.Serialize(sdReady);
@@ -579,7 +581,11 @@ namespace CommonElement
         public void Deserialize(ISerializerAndDeserializer deserializer, string text) {
             ChainEnvironmentDataHolderSdReady<DataType> sdReady = deserializer.Deserialize<ChainEnvironmentDataHolderSdReady<DataType>>(text);
 
-            floorDataFrames = sdReady.floorDataFrames;
+            foreach (var floorDataFrameText in sdReady.floorDataFrameTexts) {
+                FloorDataFrame<DataType> floorDataFrame = new FloorDataFrame<DataType>();
+                floorDataFrame.Deserialize(deserializer, floorDataFrameText);
+                floorDataFrames.Add(floorDataFrame);
+            }
             currentFloorNo = sdReady.currentFloorNo;
 
             currentFloor = floorDataFrames[currentFloorNo];
