@@ -529,7 +529,7 @@ namespace CommonElement
             sdReady.ReturnValues = ReturnValues;
 
 
-            if (typeof(DataType) is ICustomSerialize) {
+            if (typeof(ICustomSerialize).IsAssignableFrom(typeof(DataType))) {
                 foreach (var variableData in Variables) {
                     sdReady.Variables.Add(variableData.Key, (variableData.Value as ICustomSerialize).Serialize(serializer));
                 }
@@ -549,7 +549,7 @@ namespace CommonElement
             Arguments = sdReady.Arguments;
             ReturnValues = sdReady.ReturnValues;
 
-            if (typeof(DataType) is ICustomSerialize) {
+            if (typeof(ICustomSerialize).IsAssignableFrom(typeof(DataType))) {
                 foreach (var variablesData in sdReady.Variables) {
                     DataType data = (DataType)Activator.CreateInstance(typeof(DataType));
                     (data as ICustomSerialize).Deserialize(deserializer, variablesData.Value);
@@ -581,6 +581,7 @@ namespace CommonElement
         public void Deserialize(ISerializerAndDeserializer deserializer, string text) {
             ChainEnvironmentDataHolderSdReady<DataType> sdReady = deserializer.Deserialize<ChainEnvironmentDataHolderSdReady<DataType>>(text);
 
+            floorDataFrames.Clear();
             foreach (var floorDataFrameText in sdReady.floorDataFrameTexts) {
                 FloorDataFrame<DataType> floorDataFrame = new FloorDataFrame<DataType>();
                 floorDataFrame.Deserialize(deserializer, floorDataFrameText);
