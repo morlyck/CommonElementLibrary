@@ -86,8 +86,8 @@ namespace CommonElement
     {
         public bool MultiBand { get => false; 
         }
-        IChainEnvironmentOrdertaker? ordertaker = null;
-        public IChainEnvironmentOrdertaker? Ordertaker {
+        IChainEnvironmentOrdertaker ordertaker = null;
+        public IChainEnvironmentOrdertaker Ordertaker {
             get => ordertaker;
             set {
                 ordertaker = value;
@@ -125,7 +125,7 @@ namespace CommonElement
         }
 
         //---
-        IUpstairEnvironment? upstairEnvironment = null;
+        IUpstairEnvironment upstairEnvironment = null;
         int connectionFloorNo = -1;
         bool looseConnection = false;
         public void SetUpstairEnvironment_LooseConnection(IUpstairEnvironment upstairEnvironment) {
@@ -246,9 +246,9 @@ namespace CommonElement
 
         #region(object)
         public object GetValue(Type type, string variableName) {
-            var result = GetDataHolder(type.AssemblyQualifiedName).GetValue(false, variableName);
+            var result_ = GetDataHolder(type.AssemblyQualifiedName).GetValue(false, variableName);
 
-            if (result.Item2 || (upstairEnvironment == null || !upstairEnvironment.MultiBand)) return result.Item1;
+            if (result_.Item2 || (upstairEnvironment == null || !upstairEnvironment.MultiBand)) return result_.Item1;
 
             object returnValue = null;
             bool get = false;
@@ -326,7 +326,7 @@ namespace CommonElement
         }
         #endregion
 
-        public DataType? GetValue<DataType>(string variableName) {
+        public DataType GetValue<DataType>(string variableName) {
             return (DataType)GetValue(typeof(DataType), variableName);
         }
         public DataType SetValue<DataType>(string variableName, object value) {
@@ -485,7 +485,7 @@ namespace CommonElement
         string Serialize(ISerializerAndDeserializer serializer);
         void Deserialize(ISerializerAndDeserializer deserializer, string text);
         //---
-        IChainEnvironmentOrdertaker? Ordertaker { get; set; }
+        IChainEnvironmentOrdertaker Ordertaker { get; set; }
         void SetUpstairEnvironment(IChainEnvironmentDataHolder upstairEnvironment, bool looseConnection, int connectionFloorNo);
         void ClearUpstairEnvironmentSetting();
         //
@@ -565,7 +565,7 @@ namespace CommonElement
     }
     public class ChainEnvironmentDataHolder<DataType>: IChainEnvironmentDataHolder, ICustomSerialize
     {
-        public IChainEnvironmentOrdertaker? Ordertaker { get; set; } = null;
+        public IChainEnvironmentOrdertaker Ordertaker { get; set; } = null;
         //シリアライズ対応
         public string Serialize(ISerializerAndDeserializer serializer) {
             ChainEnvironmentDataHolderSdReady<DataType> sdReady = new ChainEnvironmentDataHolderSdReady<DataType>();
@@ -594,7 +594,7 @@ namespace CommonElement
 
         //---
         //上位環境
-        ChainEnvironmentDataHolder<DataType>? upstairEnvironment = null;
+        ChainEnvironmentDataHolder<DataType> upstairEnvironment = null;
         int connectionFloorNo = 0;
         bool looseConnection = false;
         public void SetUpstairEnvironment(IChainEnvironmentDataHolder upstairEnvironment, bool looseConnection, int connectionFloorNo) {
@@ -628,7 +628,7 @@ namespace CommonElement
             Ordertaker?.IgnitionGetValueEvent(typeof(DataType), variableName, returnValue.Item1);
             return returnValue;
         }
-        (DataType?,bool) _GetValue(bool multiBandAccess, string variableName, bool lowerboundAccess = false, int _connectionFloorNo = 0, bool _looseConnection = false) {
+        (DataType,bool) _GetValue(bool multiBandAccess, string variableName, bool lowerboundAccess = false, int _connectionFloorNo = 0, bool _looseConnection = false) {
             //フロアナンバーの決定
             int floorNo;
             if (!lowerboundAccess || _looseConnection) {
@@ -641,7 +641,7 @@ namespace CommonElement
             return getValue(multiBandAccess, variableName, floorNo + 1);
         }
 
-        (DataType?, bool) getValue(bool multiBandAccess, string variableName, int floorNo) {
+        (DataType, bool) getValue(bool multiBandAccess, string variableName, int floorNo) {
             int nowFloorNo = floorNo - 1;
 
             if (nowFloorNo < 0) {
