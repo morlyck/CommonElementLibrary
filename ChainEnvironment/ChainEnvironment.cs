@@ -82,8 +82,17 @@ namespace CommonElement
             targetEnvironment.SetUpstairEnvironment_LooseConnection(this);
         }
     }
+
+    #region(例外)
+    public class AttemptedToLoadAnUnsupportedVersion : Exception
+    {
+        public AttemptedToLoadAnUnsupportedVersion() : base("サポートされていないバージョンを読み込もうとしました") { }
+    }
+    #endregion
+
     public class ChainEnvironment: IUpstairEnvironment, ICustomSerialize
     {
+        public const string Version = "0.0.0";
         public bool MultiBand { get => false; 
         }
         IChainEnvironmentOrdertaker ordertaker = null;
@@ -110,7 +119,11 @@ namespace CommonElement
 
         //デシリアライズ対応
         public void Deserialize(ISerializerAndDeserializer deserializer, string text) {
-            ChainEnvironmentSdReady sdReady = deserializer.Deserialize<ChainEnvironmentSdReady>(text);
+            var versionInfoAndSerializeText = GetVersionInfoAndSerializeText(text);
+
+            if (versionInfoAndSerializeText.Item1 != null && versionInfoAndSerializeText.Item1 != Version) throw new AttemptedToLoadAnUnsupportedVersion();
+
+            ChainEnvironmentSdReady sdReady = deserializer.Deserialize<ChainEnvironmentSdReady>(versionInfoAndSerializeText.Item2);
             for(int count = 0; count < sdReady.TypeNames.Count; count++) {
                 string typeName = sdReady.TypeNames[count];
                 string serializeText = sdReady.SerializeText[count];
@@ -122,6 +135,13 @@ namespace CommonElement
 
                 dataHolders.Add(typeName, dataHolder);
             }
+        }
+
+        public (string,string) GetVersionInfoAndSerializeText(string text) {
+            int index = text.IndexOf(",");
+            if (index == -1) return (null, text);
+
+            return (text.Substring(0, index), text.Substring(index + 1));
         }
 
         //---
