@@ -114,7 +114,7 @@ namespace CommonElement
                 sdReady.SerializeText.Add(dataHolderData.Value.Serialize(serializer));
             }
 
-            return serializer.Serialize(sdReady);
+            return $"{Version},{serializer.Serialize(sdReady)}";
         }
 
         //デシリアライズ対応
