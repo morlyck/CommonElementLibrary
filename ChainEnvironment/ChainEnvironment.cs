@@ -114,7 +114,7 @@ namespace CommonElement
                 sdReady.SerializeText.Add(dataHolderData.Value.Serialize(serializer));
             }
 
-            return $"{Version},{serializer.Serialize(sdReady)}";
+            return $"^{Version},{serializer.Serialize(sdReady)}";
         }
 
         //デシリアライズ対応
@@ -138,10 +138,11 @@ namespace CommonElement
         }
 
         public (string,string) GetVersionInfoAndSerializeText(string text) {
+            if(text.Substring(0,1) != "^") return (null, text);
             int index = text.IndexOf(",");
             if (index == -1) return (null, text);
 
-            return (text.Substring(0, index), text.Substring(index + 1));
+            return (text.Substring(1, index), text.Substring(index + 1));
         }
 
         //---
