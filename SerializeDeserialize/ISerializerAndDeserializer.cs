@@ -9,6 +9,7 @@ namespace CommonElement
     public interface ISerializerAndDeserializer
     {
         string Serialize(object obj);
+        string Serialize_Indented(object obj);
         typ Deserialize<typ>(string jsonText);
         object Deserialize(Type typ, string jsonText);
         //
