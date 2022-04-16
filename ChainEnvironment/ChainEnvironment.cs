@@ -142,7 +142,7 @@ namespace CommonElement
             int index = text.IndexOf(",");
             if (index == -1) return (null, text);
 
-            return (text.Substring(1, index), text.Substring(index + 1));
+            return (text.Substring(1, index - 1), text.Substring(index + 1));
         }
 
         //---
