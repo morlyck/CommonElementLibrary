@@ -28,14 +28,7 @@ namespace CommonElement
         public List<string> SerializeText = new List<string>();
 
     }
-    public interface IUpstairEnvironment
-    {
-        bool MultiBand { get; }
-        IChainEnvironmentDataHolder GetDataHolder(string typeName);
-        IChainEnvironmentDataHolder TryGetDataHolder(string typeName);
-        void MultiBandDataHolderAll_Break(string typeName, Func<IChainEnvironmentDataHolder, bool> func);
 
-    }
     public class MultiBandUpstairEnvironment: IUpstairEnvironment
     {
         ChainEnvironment targetEnvironment = null;
@@ -137,7 +130,7 @@ namespace CommonElement
             }
         }
 
-        public (string,string) GetVersionInfoAndSerializeText(string text) {
+        (string,string) GetVersionInfoAndSerializeText(string text) {
             if(text.Substring(0,1) != "^") return (null, text);
             int index = text.IndexOf(",");
             if (index == -1) return (null, text);
