@@ -9,7 +9,7 @@ namespace CommonElement
     public interface IChainEnvironment :ICustomSerialize{
         string Version { get; set; }
 
-        public bool MultiBand { get; }
+        bool MultiBand { get; }
 
         void SetUpstairEnvironment_LooseConnection(IUpstairEnvironment upstairEnvironment);
         void SetUpstairEnvironment(IUpstairEnvironment upstairEnvironment, int connectionFloorNo);
