@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace CommonElement
 {
     public interface IChainEnvironment :ICustomSerialize{
-        string Version { get; set; }
+        string Version { get; }
 
         bool MultiBand { get; }
 
