@@ -11,10 +11,10 @@ namespace CommonElement
 
         bool MultiBand { get; }
 
-        void SetUpstairEnvironment_LooseConnection(IUpstairEnvironment upstairEnvironment);
-        void SetUpstairEnvironment(IUpstairEnvironment upstairEnvironment, int connectionFloorNo);
-        void SetUpstairEnvironment_ConnectionToCurrentFloorNo(IUpstairEnvironment upstairEnvironment);
-        void ClearUpstairEnvironmentSetting();
+        void SetUpstairChain_LooseConnection(IUpstairChain upstairChain);
+        void SetUpstairChain(IUpstairChain upstairChain, int connectionFloorNo);
+        void SetUpstairChain_ConnectionToCurrentFloorNo(IUpstairChain upstairChain);
+        void ClearUpstairChainSetting();
 
 
         DataType GetValue<DataType>(string variableName);
