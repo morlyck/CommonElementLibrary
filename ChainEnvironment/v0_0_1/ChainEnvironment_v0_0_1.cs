@@ -23,15 +23,15 @@ namespace CommonElement.ChainEnvironment_v0_0_1
         #endregion
 
         #region(UpstairChain)
-        public void SetUpstairChain(IUpstairEnvironment upstairEnvironment, int connectionFloorNo) {
+        public void SetUpstairChain(IUpstairChain upstairEnvironment, int connectionFloorNo) {
             throw new NotImplementedException();
         }
 
-        public void SetUpstairChain_ConnectionToCurrentFloorNo(IUpstairEnvironment upstairEnvironment) {
+        public void SetUpstairChain_ConnectionToCurrentFloorNo(IUpstairChain upstairEnvironment) {
             throw new NotImplementedException();
         }
 
-        public void SetUpstairChain_LooseConnection(IUpstairEnvironment upstairEnvironment) {
+        public void SetUpstairChain_LooseConnection(IUpstairChain upstairEnvironment) {
             throw new NotImplementedException();
         }
         public void ClearUpstairChainSetting() {
