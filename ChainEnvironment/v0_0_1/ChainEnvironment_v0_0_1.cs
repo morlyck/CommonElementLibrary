@@ -8,6 +8,12 @@ namespace CommonElement.ChainEnvironment_v0_0_1
 {
     public class ChainEnvironment : IChainEnvironment
     {
+        public class ChainEnvironmentSdReady
+        {
+            public Dictionary<string,string> floorDatas = new Dictionary<string,string>();
+
+        }
+
         public string Version { get; } = "0.0.1";
 
         public bool MultiBand => throw new NotImplementedException();
