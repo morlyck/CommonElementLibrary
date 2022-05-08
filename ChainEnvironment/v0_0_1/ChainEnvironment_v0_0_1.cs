@@ -47,6 +47,27 @@ namespace CommonElement.ChainEnvironment_v0_0_1
         }
         #endregion
 
+        #region(from downstair)
+        object IUpstairChain.GetValue(Type type, string variableName) {
+            throw new NotImplementedException();
+        }
+        object IUpstairChain.SetValue(Type type, string variableName, object value) {
+            throw new NotImplementedException();
+        }
+        object IUpstairChain.CreateOrSetValue_Local(Type type, string variableName, object value) {
+            throw new NotImplementedException();
+        }
+        bool IUpstairChain.Exists(Type type, string variableName) {
+            throw new NotImplementedException();
+        }
+        bool IUpstairChain.Remove(Type type, string variableName) {
+            throw new NotImplementedException();
+        }
+        bool IUpstairChain.RemoveAll(Type type, string variableName) {
+            throw new NotImplementedException();
+        }
+        #endregion
+
         #region(DataType)
         public DataType GetValue<DataType>(string variableName) {
             throw new NotImplementedException();
