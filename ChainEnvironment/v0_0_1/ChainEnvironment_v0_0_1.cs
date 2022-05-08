@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CommonElement.ChainEnvironment_v0_0_1
 {
-    public class ChainEnvironment : IChainEnvironment
+    public class ChainEnvironment : IChainEnvironment, IUpstairChain
     {
         public class ChainEnvironmentSdReady
         {
@@ -27,6 +27,8 @@ namespace CommonElement.ChainEnvironment_v0_0_1
         }
 
         #endregion
+
+
 
         #region(UpstairChain)
         public void SetUpstairChain(IUpstairChain upstairEnvironment, int connectionFloorNo) {
