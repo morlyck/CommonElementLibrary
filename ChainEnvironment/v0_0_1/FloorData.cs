@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace CommonElement.ChainEnvironment_v0_0_1
 {
-    internal class FloorData
+    public interface IFloorData
+    {
+
+    }
+    internal class FloorData<DataType>: IFloorData
     {
 
     }
