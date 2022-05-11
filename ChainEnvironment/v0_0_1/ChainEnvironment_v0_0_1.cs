@@ -28,6 +28,18 @@ namespace CommonElement.ChainEnvironment_v0_0_1
 
         #endregion
 
+        List<Dictionary<Type, IFloorData>> FloorDatas = new List<Dictionary<Type, IFloorData>>();
+
+        IFloorData GetFloorData(Type type) {
+            if (currentFloors.ContainsKey(type)) return currentFloors[type];
+            IFloorData floorData = CreateAndSetupFloorData(type);
+            currentFloors.Add(type, floorData);
+            return floorData;
+        }
+        IFloorData CreateAndSetupFloorData(Type type) {
+            throw new NotImplementedException();
+        }
+
 
 
         #region(UpstairChain)
