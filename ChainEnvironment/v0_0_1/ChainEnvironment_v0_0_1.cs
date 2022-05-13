@@ -4,13 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using CommonElement.ChainEnvironment_v0_0_1;
+
 namespace CommonElement.ChainEnvironment_v0_0_1
 {
     public class ChainEnvironment : IChainEnvironment, IUpstairChain
     {
         public class ChainEnvironmentSdReady
         {
-            public Dictionary<string,string> floorDatas = new Dictionary<string,string>();
+            public Dictionary<string, string> floorDatas = new Dictionary<string, string>();
 
         }
 
@@ -27,6 +29,9 @@ namespace CommonElement.ChainEnvironment_v0_0_1
         }
 
         #endregion
+
+        int currentFloorNo = 0;
+        Dictionary<Type, IFloorData> currentFloors = null;
 
         List<Dictionary<Type, IFloorData>> FloorDatas = new List<Dictionary<Type, IFloorData>>();
 
