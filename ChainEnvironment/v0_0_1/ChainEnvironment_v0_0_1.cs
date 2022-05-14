@@ -31,18 +31,15 @@ namespace CommonElement.ChainEnvironment_v0_0_1
         #endregion
 
         int currentFloorNo = 0;
-        Dictionary<Type, IFloorData> currentFloors = null;
+        Dictionary<Type, List<object>> currentFloors = null;
 
-        List<Dictionary<Type, IFloorData>> FloorDatas = new List<Dictionary<Type, IFloorData>>();
+        List<Dictionary<Type, List<object>>> FloorDatas = new List<Dictionary<Type, List<object>>>();
 
-        IFloorData GetFloorData(Type type) {
+        List<object> GetFloorData(Type type) {
             if (currentFloors.ContainsKey(type)) return currentFloors[type];
-            IFloorData floorData = CreateAndSetupFloorData(type);
+            var floorData = new List<object>();
             currentFloors.Add(type, floorData);
             return floorData;
-        }
-        IFloorData CreateAndSetupFloorData(Type type) {
-            throw new NotImplementedException();
         }
 
 
