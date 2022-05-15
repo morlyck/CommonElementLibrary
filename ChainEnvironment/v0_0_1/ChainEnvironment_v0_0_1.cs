@@ -31,21 +31,42 @@ namespace CommonElement.ChainEnvironment_v0_0_1
         #endregion
 
         int currentFloorNo = 0;
-        Dictionary<Type, List<object>> currentFloors = null;
+        Dictionary<Type, Dictionary<string, object>> currentFloor = null;
 
-        List<Dictionary<Type, List<object>>> FloorDatas = new List<Dictionary<Type, List<object>>>();
+        List<Dictionary<Type, Dictionary<string,object>>> FloorDatas = new List<Dictionary<Type, Dictionary<string, object>>>();
 
-        List<object> GetFloorData(Type type) {
-            if (currentFloors.ContainsKey(type)) return currentFloors[type];
-            var floorData = new List<object>();
-            currentFloors.Add(type, floorData);
-            return floorData;
+        //有効な値が取得できた場合の戻り値 : true
+        bool TryGetVariableValue(Type type,string variableName, out object value) {
+            if(currentFloorNo == -1 ||
+                !currentFloor.ContainsKey(type)||
+                !currentFloor[type].ContainsKey(variableName)) {
+                value = null;
+                return false;
+            }
+
+            value = currentFloor[type][variableName];
+            return true;
         }
 
-        object GetVariableValue(Type type,string variableName) {
+        //値の更新ないしは新規作成がされた場合の戻り値 : true
+        bool SetVariableValue(Type type, string variableName, object value) {
+            if (currentFloorNo == -1) return false;
 
+            Dictionary<string, object> variables = null;
+            if (!currentFloor.ContainsKey(type)) {
+                variables = new Dictionary<string, object>();
+                currentFloor.Add(type, variables);
+            } else {
+                variables = currentFloor[type];
+            }
+
+            if (!variables.ContainsKey(variableName)) {
+                variables.Add(variableName, value);
+            } else {
+                variables[variableName] = value;
+            }
+            return true;
         }
-
 
 
         #region(UpstairChain)
@@ -86,38 +107,18 @@ namespace CommonElement.ChainEnvironment_v0_0_1
         }
         #endregion
 
-        #region(DataType)
-        public DataType GetValue<DataType>(string variableName) {
-            throw new NotImplementedException();
-        }
-        public DataType SetValue<DataType>(string variableName, object value) {
-            throw new NotImplementedException();
-        }
-        public bool Exists<DataType>(string variableName) {
-            throw new NotImplementedException();
-        }
-        public DataType CreateOrSetValue_Local<DataType>(string variableName, object value) {
-            throw new NotImplementedException();
-        }
-        public bool Remove<DataType>(string variableName) {
-            throw new NotImplementedException();
-        }
-        public void RemoveAll<DataType>(string variableName) {
-            throw new NotImplementedException();
-        }
-        #endregion
 
         #region(Type)
-        public object GetValue(Type type, string variableName) {
+        public bool TryGetValue(Type type, string variableName, out object value) {
             throw new NotImplementedException();
         }
-        public object SetValue(Type type, string variableName, object value) {
+        public bool TrySetValue(Type type, string variableName, object value) {
+            throw new NotImplementedException();
+        }
+        public bool TryCreateOrSetValue_Locally(Type type, string variableName, object value) {
             throw new NotImplementedException();
         }
         public bool Exists(Type type, string variableName) {
-            throw new NotImplementedException();
-        }
-        public object CreateOrSetValue_Local(Type type, string variableName, object value) {
             throw new NotImplementedException();
         }
         public bool Remove(Type type, string variableName) {
