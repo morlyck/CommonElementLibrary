@@ -42,6 +42,10 @@ namespace CommonElement.ChainEnvironment_v0_0_1
             return floorData;
         }
 
+        object GetVariableValue(Type type,string variableName) {
+
+        }
+
 
 
         #region(UpstairChain)
