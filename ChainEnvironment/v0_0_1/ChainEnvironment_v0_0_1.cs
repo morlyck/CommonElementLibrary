@@ -124,7 +124,7 @@ namespace CommonElement.ChainEnvironment_v0_0_1
         public bool Remove(Type type, string variableName) {
             throw new NotImplementedException();
         }
-        public bool RemoveAll(Type type, string variableName) {
+        public bool RemoveAll() {
             throw new NotImplementedException();
         }
         #endregion

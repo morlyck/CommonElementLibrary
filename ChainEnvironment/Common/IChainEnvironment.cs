@@ -22,7 +22,7 @@ namespace CommonElement
         bool TryCreateOrSetValue_Locally(Type type, string variableName, object value);
         bool Exists(Type type, string variableName);
         bool Remove(Type type, string variableName);
-        bool RemoveAll(Type type, string variableName);
+        bool RemoveAll();
 
 
         void Down();
