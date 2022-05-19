@@ -49,7 +49,7 @@ namespace CommonElement.ChainEnvironment_v0_0_1
         }
 
         //値の更新ないしは新規作成がされた場合の戻り値 : true
-        bool SetVariableValue(Type type, string variableName, object value) {
+        bool TrySetVariableValue(Type type, string variableName, object value, bool locally) {
             if (currentFloorNo == -1) return false;
 
             Dictionary<string, object> variables = null;
@@ -66,6 +66,22 @@ namespace CommonElement.ChainEnvironment_v0_0_1
                 variables[variableName] = value;
             }
             return true;
+        }
+
+        //削除成功時の戻り値 : true
+        bool TryRemoveVariable(Type type, string variableName) {
+            if (currentFloorNo == -1) return false;
+
+            if(!currentFloor.ContainsKey(type) ||
+                !currentFloor[type].ContainsKey(variableName))return false;
+            return currentFloor[type].Remove(variableName);
+        }
+
+        //削除成功時の戻り値 : true
+        bool TryExistsVariable(Type type, string variableName) {
+            if (currentFloorNo == -1) return false;
+
+            return currentFloor.ContainsKey(type) && currentFloor[type].ContainsKey(variableName);
         }
 
 
@@ -110,22 +126,27 @@ namespace CommonElement.ChainEnvironment_v0_0_1
 
         #region(Type)
         public bool TryGetValue(Type type, string variableName, out object value) {
-            throw new NotImplementedException();
+            return TryGetVariableValue(type, variableName, out value);
         }
         public bool TrySetValue(Type type, string variableName, object value) {
-            throw new NotImplementedException();
+            return TrySetVariableValue(type, variableName, value, false);
         }
         public bool TryCreateOrSetValue_Locally(Type type, string variableName, object value) {
-            throw new NotImplementedException();
+            return TrySetVariableValue(type, variableName, value, true);
         }
         public bool Exists(Type type, string variableName) {
-            throw new NotImplementedException();
+            return TryExistsVariable(type, variableName);
         }
         public bool Remove(Type type, string variableName) {
-            throw new NotImplementedException();
+            return TryRemoveVariable(type, variableName);
         }
         public bool RemoveAll() {
-            throw new NotImplementedException();
+            currentFloorNo = 0;
+            FloorDatas.Clear();
+            currentFloor = new Dictionary<Type, Dictionary<string, object>>();
+            FloorDatas.Add(currentFloor);
+
+            return true;
         }
         #endregion
 
