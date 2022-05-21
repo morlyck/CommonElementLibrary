@@ -86,19 +86,29 @@ namespace CommonElement.ChainEnvironment_v0_0_1
 
 
         #region(UpstairChain)
+        IUpstairChain UpstairEnvironment = null;
+        int ConnectionFloorNo;
+        bool LooseConnection;
         public void SetUpstairChain(IUpstairChain upstairEnvironment, int connectionFloorNo) {
-            throw new NotImplementedException();
+            UpstairEnvironment = upstairEnvironment;
+            ConnectionFloorNo = connectionFloorNo;
+            LooseConnection = false;
         }
 
         public void SetUpstairChain_ConnectionToCurrentFloorNo(IUpstairChain upstairEnvironment) {
-            throw new NotImplementedException();
+            UpstairEnvironment = upstairEnvironment;
+            ConnectionFloorNo = currentFloorNo;
+            LooseConnection = false;
         }
 
         public void SetUpstairChain_LooseConnection(IUpstairChain upstairEnvironment) {
-            throw new NotImplementedException();
+            UpstairEnvironment = upstairEnvironment;
+            ConnectionFloorNo = -1;
+            LooseConnection = true;
         }
+
         public void ClearUpstairChainSetting() {
-            throw new NotImplementedException();
+            UpstairEnvironment = null;
         }
         #endregion
 
