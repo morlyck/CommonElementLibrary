@@ -113,13 +113,13 @@ namespace CommonElement.ChainEnvironment_v0_0_1
         #endregion
 
         #region(from downstair)
-        object IUpstairChain.GetValue(Type type, string variableName) {
+        bool IUpstairChain.TryGetValue(Type type, string variableName, out object value) {
             throw new NotImplementedException();
         }
-        object IUpstairChain.SetValue(Type type, string variableName, object value) {
+        bool IUpstairChain.TrySetValue(Type type, string variableName, object value) {
             throw new NotImplementedException();
         }
-        object IUpstairChain.CreateOrSetValue_Local(Type type, string variableName, object value) {
+        bool IUpstairChain.TryCreateOrSetValue_Locally(Type type, string variableName, object value) {
             throw new NotImplementedException();
         }
         bool IUpstairChain.Exists(Type type, string variableName) {
@@ -128,7 +128,7 @@ namespace CommonElement.ChainEnvironment_v0_0_1
         bool IUpstairChain.Remove(Type type, string variableName) {
             throw new NotImplementedException();
         }
-        bool IUpstairChain.RemoveAll(Type type, string variableName) {
+        bool IUpstairChain.RemoveAll() {
             throw new NotImplementedException();
         }
         #endregion
