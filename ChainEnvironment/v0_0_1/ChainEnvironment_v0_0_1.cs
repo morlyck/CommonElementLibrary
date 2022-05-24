@@ -27,6 +27,27 @@ namespace CommonElement.ChainEnvironment_v0_0_1
         public void Deserialize(ISerializerAndDeserializer deserializer, string text) {
             throw new NotImplementedException();
         }
+        (string, string) GetVersionInfoAndSerializeText(string text) {
+            if (text.Substring(0, 1) != "^") return (null, text);
+            int index = text.IndexOf(",");
+            if (index == -1) return (null, text);
+
+            return (text.Substring(1, index - 1), text.Substring(index + 1));
+        }
+        (int, string, string) GetTypeTextAndVersionName(string text) {
+            int index = text.IndexOf("/~,");
+            if (index == -1) return (0, null, text);
+            int floorNo = int.Parse(text.Substring(0, index));
+            string temp = text.Substring(index + 1);
+            index = temp.IndexOf("/~,");
+
+            string typeText = text.Substring(0, index);
+            string versionName = text.Substring(index + 1);
+            return (floorNo, typeText, versionName);
+        }
+        string GetAssyTextTypeTextAndVersionName(string typeText, string versionName) {
+            return $"{typeText}/~,{versionName}";
+        }
 
         #endregion
 
