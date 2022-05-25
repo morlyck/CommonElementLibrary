@@ -12,7 +12,7 @@ namespace CommonElement.ChainEnvironment_v0_0_1
     {
         public class ChainEnvironmentSdReady
         {
-            public Dictionary<string, string> floorDatas = new Dictionary<string, string>();
+            public Dictionary<string, string> FloorDatas = new Dictionary<string, string>();
 
         }
 
@@ -23,6 +23,8 @@ namespace CommonElement.ChainEnvironment_v0_0_1
         #region(Serialize)
         public string Serialize(ISerializerAndDeserializer serializer) {
             throw new NotImplementedException();
+            ChainEnvironmentSdReady sdReady = new ChainEnvironmentSdReady();
+            return serializer.Serialize_Indented(sdReady);
         }
         public void Deserialize(ISerializerAndDeserializer deserializer, string text) {
             throw new NotImplementedException();
