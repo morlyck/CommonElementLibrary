@@ -12,7 +12,7 @@ namespace CommonElement.ChainEnvironment_v0_0_1
     {
         public class ChainEnvironmentSdReady
         {
-            public Dictionary<string, string> FloorDatas = new Dictionary<string, string>();
+            public List<List<string>> FloorDatas ;
 
         }
 
@@ -22,9 +22,21 @@ namespace CommonElement.ChainEnvironment_v0_0_1
 
         #region(Serialize)
         public string Serialize(ISerializerAndDeserializer serializer) {
-            throw new NotImplementedException();
             ChainEnvironmentSdReady sdReady = new ChainEnvironmentSdReady();
-            return serializer.Serialize_Indented(sdReady);
+            for(int count = 0; count < FloorDatas.Count; count++) {
+                List<string> versions = new List<string>();
+                foreach (var floorData in FloorDatas[count]) {
+                    string typeText = floorData.Key.AssemblyQualifiedName;
+                    foreach (var version in floorData.Value) {
+                        versions.Add(AssyFloorDataText(
+                            typeText, 
+                            version.Key, 
+                            serializer.Serialize_Indented(version.Value)));
+                    }
+                }
+                sdReady.FloorDatas.Add(versions);
+            }
+            return $"^{Version},{serializer.Serialize_Indented(sdReady)}";
         }
         public void Deserialize(ISerializerAndDeserializer deserializer, string text) {
             throw new NotImplementedException();
@@ -36,19 +48,19 @@ namespace CommonElement.ChainEnvironment_v0_0_1
 
             return (text.Substring(1, index - 1), text.Substring(index + 1));
         }
-        (int, string, string) GetTypeTextAndVersionName(string text) {
+        (string, string, string) ParseFloorDataText(string text) {
             int index = text.IndexOf("/~,");
-            if (index == -1) return (0, null, text);
-            int floorNo = int.Parse(text.Substring(0, index));
+            if (index == -1) return (null, null, null);
+            string typeText = text.Substring(0, index);
             string temp = text.Substring(index + 1);
             index = temp.IndexOf("/~,");
 
-            string typeText = text.Substring(0, index);
-            string versionName = text.Substring(index + 1);
-            return (floorNo, typeText, versionName);
+            string versionName = text.Substring(0, index);
+            string dataText = text.Substring(index + 1);
+            return (typeText, versionName, dataText);
         }
-        string GetAssyTextTypeTextAndVersionName(string typeText, string versionName) {
-            return $"{typeText}/~,{versionName}";
+        string AssyFloorDataText(string typeText, string versionName, string dataText) {
+            return $"{typeText}/~,{versionName}/~,{dataText}";
         }
 
         #endregion
