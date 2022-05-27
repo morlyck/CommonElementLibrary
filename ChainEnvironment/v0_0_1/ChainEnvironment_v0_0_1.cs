@@ -22,7 +22,7 @@ namespace CommonElement.ChainEnvironment_v0_0_1
 
         #region(Serialize)
         public string Serialize(ISerializerAndDeserializer serializer) {
-            ChainEnvironmentSdReady sdReady = new ChainEnvironmentSdReady();
+            var sdReady = new ChainEnvironmentSdReady();
             for(int count = 0; count < FloorDatas.Count; count++) {
                 List<string> versions = new List<string>();
                 foreach (var floorData in FloorDatas[count]) {
@@ -39,7 +39,34 @@ namespace CommonElement.ChainEnvironment_v0_0_1
             return $"^{Version},{serializer.Serialize_Indented(sdReady)}";
         }
         public void Deserialize(ISerializerAndDeserializer deserializer, string text) {
-            throw new NotImplementedException();
+            var result = GetVersionInfoAndSerializeText(text);
+
+            if (result.Item1 != Version) throw new Exception("ChainEnvironmentのDeserializeに失敗");
+            var sdReady = deserializer.Deserialize<ChainEnvironmentSdReady>(result.Item2);
+            for(int count = 0; count<sdReady.FloorDatas.Count; count++) {
+                var floorData = new Dictionary<Type, Dictionary<string, object>>();
+
+                var floorDataTexts = sdReady.FloorDatas[count];
+                foreach(var floorDataText in floorDataTexts) {
+                    var floorDataSource = ParseFloorDataText(floorDataText);
+                    Type type = Type.GetType(floorDataSource.Item1);
+                    string versionName = floorDataSource.Item2;
+                    object value = deserializer.Deserialize(type ,floorDataSource.Item3);
+
+                    if (!floorData.ContainsKey(type)) {
+                        Dictionary<string, object> versions = new Dictionary<string, object>();
+                        versions.Add(versionName, value);
+                        floorData.Add(type, versions);
+                    } else {
+                        floorData[type].Add(versionName, value);
+                    }
+                }
+
+                //フロアデータを追加
+                FloorDatas.Add(floorData);
+            }
+            currentFloorNo = FloorDatas.Count - 1;
+            currentFloor = FloorDatas[currentFloorNo];
         }
         (string, string) GetVersionInfoAndSerializeText(string text) {
             if (text.Substring(0, 1) != "^") return (null, text);
