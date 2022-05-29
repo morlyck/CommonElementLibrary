@@ -225,7 +225,9 @@ namespace CommonElement.ChainEnvironment_v0_0_1
 
 
         public void Down() {
-            throw new NotImplementedException();
+            FloorDatas.Add(new Dictionary<Type, Dictionary<string, object>>());
+            currentFloorNo++;
+            currentFloor = FloorDatas[currentFloorNo];
         }
         public void PullArguments() {
             throw new NotImplementedException();
