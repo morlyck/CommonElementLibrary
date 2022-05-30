@@ -230,7 +230,7 @@ namespace CommonElement.ChainEnvironment_v0_0_1
             currentFloor = FloorDatas[currentFloorNo];
         }
         public void PullArguments() {
-            throw new NotImplementedException();
+            //何もしない
         }
         public void Up() {
             FloorDatas.RemoveAt(FloorDatas.Count - 1);

@@ -29,7 +29,7 @@ namespace CommonElement
         void PullArguments();
         void Up();
 
-        void Down(List<(Type, string)> returnValues, List<(Type, string)> arguments);
+        void Down(List<(Type, string)> returnValues, List<(Type, string, object)> arguments);
         void PullArguments(List<(Type, string)> variables);
         void Up(List<(Type, string)> returnValues);
 
