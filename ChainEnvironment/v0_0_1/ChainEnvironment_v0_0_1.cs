@@ -233,7 +233,9 @@ namespace CommonElement.ChainEnvironment_v0_0_1
             throw new NotImplementedException();
         }
         public void Up() {
-            throw new NotImplementedException();
+            FloorDatas.RemoveAt(FloorDatas.Count - 1);
+            currentFloorNo--;
+            currentFloor = FloorDatas[currentFloorNo];
         }
 
         public void Down(List<(Type, string)> returnValues, List<(Type, string)> arguments) {
