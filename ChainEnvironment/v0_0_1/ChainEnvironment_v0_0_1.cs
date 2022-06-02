@@ -238,8 +238,13 @@ namespace CommonElement.ChainEnvironment_v0_0_1
             currentFloor = FloorDatas[currentFloorNo];
         }
 
-        public void Down(List<(Type, string)> returnValues, List<(Type, string)> arguments) {
-            throw new NotImplementedException();
+        List<(Type, string)> ReturnValues = null;
+        public void Down(List<(Type, string)> returnValues, List<(Type, string, object)> arguments) {
+            ReturnValues = returnValues;
+            Down();
+            foreach(var arg in arguments) {
+                TryCreateOrSetValue_Locally(arg.Item1, arg.Item2, arg.Item3);
+            }
         }
         public void PullArguments(List<(Type, string)> variables) {
             throw new NotImplementedException();
