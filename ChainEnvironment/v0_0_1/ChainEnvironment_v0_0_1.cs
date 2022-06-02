@@ -225,6 +225,7 @@ namespace CommonElement.ChainEnvironment_v0_0_1
 
 
         public void Down() {
+            Arguments = null;
             FloorDatas.Add(new Dictionary<Type, Dictionary<string, object>>());
             currentFloorNo++;
             currentFloor = FloorDatas[currentFloorNo];
@@ -239,15 +240,17 @@ namespace CommonElement.ChainEnvironment_v0_0_1
         }
 
         List<(Type, string)> ReturnValues = null;
+        List<(Type, string, object)> Arguments = null;
         public void Down(List<(Type, string)> returnValues, List<(Type, string, object)> arguments) {
             ReturnValues = returnValues;
             Down();
-            foreach(var arg in arguments) {
-                TryCreateOrSetValue_Locally(arg.Item1, arg.Item2, arg.Item3);
-            }
+            Arguments = arguments;
         }
         public void PullArguments(List<(Type, string)> variables) {
-            throw new NotImplementedException();
+            if (Arguments == null) return;
+            for(int count = 0; count < variables.Count; count++) {
+                TryCreateOrSetValue_Locally(Arguments[count].Item1, variables[count].Item2, Arguments[count].Item3);
+            }
         }
         public void Up(List<(Type, string)> returnValues) {
             throw new NotImplementedException();
