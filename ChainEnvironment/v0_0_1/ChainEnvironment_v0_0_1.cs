@@ -253,7 +253,17 @@ namespace CommonElement.ChainEnvironment_v0_0_1
             }
         }
         public void Up(List<(Type, string)> returnValues) {
-            throw new NotImplementedException();
+            List<object> values = new List<object>();
+            for(int count = 0; count < returnValues.Count; count++) {
+                values.Add(this.GetValue(returnValues[count].Item1, returnValues[count].Item2));
+            }
+            currentFloorNo--;
+            currentFloor = FloorDatas[currentFloorNo];
+            for (int count = 0; count < ReturnValues.Count; count++) {
+                TrySetValue(ReturnValues[count].Item1, ReturnValues[count].Item2, values[count]);
+            }
+
+            FloorDatas.RemoveAt(FloorDatas.Count - 1);
         }
     }
 }
