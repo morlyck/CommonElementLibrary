@@ -16,5 +16,9 @@ namespace CommonElement
         string SerializeCustomOrBasic(object obj);
         typ DeserializeCustomOrBasic<typ>(string jsonText);
         object DeserializeCustomOrBasic(Type typ, string jsonText);
+
+        string SerializeCustomOrBasic_Indented(object obj);
+        typ DeserializeCustomOrBasic_Indented<typ>(string jsonText);
+        object DeserializeCustomOrBasic_Indented(Type typ, string jsonText);
     }
 }
