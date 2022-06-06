@@ -174,6 +174,28 @@ namespace CommonElement.ChainEnvironment_v0_0_1
         }
         #endregion
 
+        #region()
+        //有効な値が取得できた場合の戻り値 : true
+        bool TryGetVariableValue_Inner(Type type, string variableName, out object value, bool downstairAccess = false) {
+            throw new NotImplementedException();
+        }
+
+        //値の更新ないしは新規作成がされた場合の戻り値 : true
+        bool TrySetVariableValue_Inner(Type type, string variableName, object value, bool locally, bool downstairAccess = false) {
+            throw new NotImplementedException();
+        }
+
+        //削除成功時の戻り値 : true
+        bool TryRemoveVariable_Inner(Type type, string variableName, bool downstairAccess = false) {
+            throw new NotImplementedException();
+        }
+
+        //削除成功時の戻り値 : true
+        bool TryExistsVariable_Inner(Type type, string variableName, bool downstairAccess = false) {
+            throw new NotImplementedException();
+        }
+        #endregion
+
         #region(from downstair)
         bool IUpstairChain.TryGetValue(Type type, string variableName, out object value) {
             throw new NotImplementedException();
