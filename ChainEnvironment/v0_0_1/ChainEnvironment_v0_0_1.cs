@@ -99,15 +99,7 @@ namespace CommonElement.ChainEnvironment_v0_0_1
 
         //有効な値が取得できた場合の戻り値 : true
         bool TryGetVariableValue(Type type,string variableName, out object value) {
-            if(currentFloorNo == -1 ||
-                !currentFloor.ContainsKey(type)||
-                !currentFloor[type].ContainsKey(variableName)) {
-                value = null;
-                return false;
-            }
-
-            value = currentFloor[type][variableName];
-            return true;
+            return TryGetVariableValue_Inner(type, variableName, out value, false);
         }
 
         //値の更新ないしは新規作成がされた場合の戻り値 : true
@@ -174,10 +166,18 @@ namespace CommonElement.ChainEnvironment_v0_0_1
         }
         #endregion
 
-        #region()
+        #region(Inner)
         //有効な値が取得できた場合の戻り値 : true
         bool TryGetVariableValue_Inner(Type type, string variableName, out object value, bool downstairAccess = false) {
-            throw new NotImplementedException();
+            if (currentFloorNo == -1 ||
+                !currentFloor.ContainsKey(type) ||
+                !currentFloor[type].ContainsKey(variableName)) {
+                value = null;
+                return false;
+            }
+
+            value = currentFloor[type][variableName];
+            return true;
         }
 
         //値の更新ないしは新規作成がされた場合の戻り値 : true
@@ -198,7 +198,7 @@ namespace CommonElement.ChainEnvironment_v0_0_1
 
         #region(from downstair)
         bool IUpstairChain.TryGetValue(Type type, string variableName, out object value) {
-            throw new NotImplementedException();
+            return TryGetVariableValue_Inner(type, variableName, out value, true);
         }
         bool IUpstairChain.TrySetValue(Type type, string variableName, object value) {
             throw new NotImplementedException();
