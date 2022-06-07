@@ -210,10 +210,10 @@ namespace CommonElement.ChainEnvironment_v0_0_1
             throw new NotImplementedException();
         }
         bool IUpstairChain.Remove(Type type, string variableName) {
-            throw new NotImplementedException();
+            return TryRemoveVariable_Inner(type, variableName, true);
         }
         bool IUpstairChain.RemoveAll() {
-            throw new NotImplementedException();
+            return RemoveAll();
         }
         #endregion
 
