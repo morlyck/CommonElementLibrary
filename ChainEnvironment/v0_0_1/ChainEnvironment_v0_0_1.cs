@@ -104,22 +104,7 @@ namespace CommonElement.ChainEnvironment_v0_0_1
 
         //値の更新ないしは新規作成がされた場合の戻り値 : true
         bool TrySetVariableValue(Type type, string variableName, object value, bool locally) {
-            if (currentFloorNo == -1) return false;
-
-            Dictionary<string, object> variables = null;
-            if (!currentFloor.ContainsKey(type)) {
-                variables = new Dictionary<string, object>();
-                currentFloor.Add(type, variables);
-            } else {
-                variables = currentFloor[type];
-            }
-
-            if (!variables.ContainsKey(variableName)) {
-                variables.Add(variableName, value);
-            } else {
-                variables[variableName] = value;
-            }
-            return true;
+            return TrySetVariableValue_Inner(type, variableName, value, locally, false);
         }
 
         //削除成功時の戻り値 : true
@@ -182,7 +167,22 @@ namespace CommonElement.ChainEnvironment_v0_0_1
 
         //値の更新ないしは新規作成がされた場合の戻り値 : true
         bool TrySetVariableValue_Inner(Type type, string variableName, object value, bool locally, bool downstairAccess = false) {
-            throw new NotImplementedException();
+            if (currentFloorNo == -1) return false;
+
+            Dictionary<string, object> variables = null;
+            if (!currentFloor.ContainsKey(type)) {
+                variables = new Dictionary<string, object>();
+                currentFloor.Add(type, variables);
+            } else {
+                variables = currentFloor[type];
+            }
+
+            if (!variables.ContainsKey(variableName)) {
+                variables.Add(variableName, value);
+            } else {
+                variables[variableName] = value;
+            }
+            return true;
         }
 
         //削除成功時の戻り値 : true
@@ -201,7 +201,7 @@ namespace CommonElement.ChainEnvironment_v0_0_1
             return TryGetVariableValue_Inner(type, variableName, out value, true);
         }
         bool IUpstairChain.TrySetValue(Type type, string variableName, object value) {
-            throw new NotImplementedException();
+            return TrySetVariableValue_Inner(type, variableName, value, true);
         }
         bool IUpstairChain.TryCreateOrSetValue_Locally(Type type, string variableName, object value) {
             throw new NotImplementedException();
