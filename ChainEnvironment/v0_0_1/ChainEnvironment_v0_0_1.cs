@@ -109,18 +109,12 @@ namespace CommonElement.ChainEnvironment_v0_0_1
 
         //削除成功時の戻り値 : true
         bool TryRemoveVariable(Type type, string variableName) {
-            if (currentFloorNo == -1) return false;
-
-            if(!currentFloor.ContainsKey(type) ||
-                !currentFloor[type].ContainsKey(variableName))return false;
-            return currentFloor[type].Remove(variableName);
+            return TryRemoveVariable_Inner(type, variableName, false);
         }
 
         //削除成功時の戻り値 : true
         bool TryExistsVariable(Type type, string variableName) {
-            if (currentFloorNo == -1) return false;
-
-            return currentFloor.ContainsKey(type) && currentFloor[type].ContainsKey(variableName);
+            return TryExistsVariable_Inner(type, variableName, false);
         }
 
 
@@ -187,12 +181,18 @@ namespace CommonElement.ChainEnvironment_v0_0_1
 
         //削除成功時の戻り値 : true
         bool TryRemoveVariable_Inner(Type type, string variableName, bool downstairAccess = false) {
-            throw new NotImplementedException();
+            if (currentFloorNo == -1) return false;
+
+            if (!currentFloor.ContainsKey(type) ||
+                !currentFloor[type].ContainsKey(variableName)) return false;
+            return currentFloor[type].Remove(variableName);
         }
 
         //削除成功時の戻り値 : true
         bool TryExistsVariable_Inner(Type type, string variableName, bool downstairAccess = false) {
-            throw new NotImplementedException();
+            if (currentFloorNo == -1) return false;
+
+            return currentFloor.ContainsKey(type) && currentFloor[type].ContainsKey(variableName);
         }
         #endregion
 
@@ -201,13 +201,13 @@ namespace CommonElement.ChainEnvironment_v0_0_1
             return TryGetVariableValue_Inner(type, variableName, out value, true);
         }
         bool IUpstairChain.TrySetValue(Type type, string variableName, object value) {
-            return TrySetVariableValue_Inner(type, variableName, value, true);
+            return TrySetVariableValue_Inner(type, variableName, value, false, true);
         }
         bool IUpstairChain.TryCreateOrSetValue_Locally(Type type, string variableName, object value) {
-            throw new NotImplementedException();
+            return TrySetVariableValue_Inner(type, variableName, value, true, true);
         }
         bool IUpstairChain.Exists(Type type, string variableName) {
-            throw new NotImplementedException();
+            return TryExistsVariable_Inner(type, variableName, true);
         }
         bool IUpstairChain.Remove(Type type, string variableName) {
             return TryRemoveVariable_Inner(type, variableName, true);
