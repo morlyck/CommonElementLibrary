@@ -218,34 +218,6 @@ namespace CommonElement.ChainEnvironment_v0_0_1
         #endregion
 
 
-        #region(Type)
-        public bool TryGetValue(Type type, string variableName, out object value) {
-            return TryGetVariableValue(type, variableName, out value);
-        }
-        public bool TrySetValue(Type type, string variableName, object value) {
-            return TrySetVariableValue(type, variableName, value, false);
-        }
-        public bool TryCreateOrSetValue_Locally(Type type, string variableName, object value) {
-            return TrySetVariableValue(type, variableName, value, true);
-        }
-        public bool Exists(Type type, string variableName) {
-            return TryExistsVariable(type, variableName);
-        }
-        public bool Remove(Type type, string variableName) {
-            return TryRemoveVariable(type, variableName);
-        }
-        public bool RemoveAll() {
-            currentFloorNo = 0;
-            FloorDatas.Clear();
-            currentFloor = new Dictionary<Type, Dictionary<string, object>>();
-            FloorDatas.Add(currentFloor);
-
-            return true;
-        }
-        #endregion
-
-
-
         public void Down() {
             Arguments = null;
             FloorDatas.Add(new Dictionary<Type, Dictionary<string, object>>());
