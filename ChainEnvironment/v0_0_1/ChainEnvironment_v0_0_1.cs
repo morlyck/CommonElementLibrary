@@ -98,22 +98,28 @@ namespace CommonElement.ChainEnvironment_v0_0_1
         List<Dictionary<Type, Dictionary<string,object>>> FloorDatas = new List<Dictionary<Type, Dictionary<string, object>>>();
 
         //有効な値が取得できた場合の戻り値 : true
-        bool TryGetVariableValue(Type type,string variableName, out object value) {
+        public bool TryGetValue(Type type,string variableName, out object value) {
             return TryGetVariableValue_Inner(type, variableName, out value, false);
         }
 
         //値の更新ないしは新規作成がされた場合の戻り値 : true
-        bool TrySetVariableValue(Type type, string variableName, object value, bool locally) {
-            return TrySetVariableValue_Inner(type, variableName, value, locally, false);
+        public bool TrySetValue(Type type, string variableName, object value) {
+            return TrySetVariableValue_Inner(type, variableName, value, false, false);
+        }
+        public bool TryCreateOrSetValue_Locally(Type type, string variableName, object value) {
+            return TrySetVariableValue_Inner(type, variableName, value, true, false);
         }
 
         //削除成功時の戻り値 : true
-        bool TryRemoveVariable(Type type, string variableName) {
+        public bool Remove(Type type, string variableName) {
             return TryRemoveVariable_Inner(type, variableName, false);
         }
+        public bool RemoveAll() {
+            return TryRemoveVariableAll_Inner(false);
+        }
 
         //削除成功時の戻り値 : true
-        bool TryExistsVariable(Type type, string variableName) {
+        public bool Exists(Type type, string variableName) {
             return TryExistsVariable_Inner(type, variableName, false);
         }
 
@@ -147,7 +153,7 @@ namespace CommonElement.ChainEnvironment_v0_0_1
 
         #region(Inner)
         //有効な値が取得できた場合の戻り値 : true
-        bool TryGetVariableValue_Inner(Type type, string variableName, out object value, bool downstairAccess = false) {
+        bool TryGetVariableValue_Inner(Type type, string variableName, out object value, bool downstairAccess) {
             if (currentFloorNo == -1 ||
                 !currentFloor.ContainsKey(type) ||
                 !currentFloor[type].ContainsKey(variableName)) {
@@ -160,7 +166,7 @@ namespace CommonElement.ChainEnvironment_v0_0_1
         }
 
         //値の更新ないしは新規作成がされた場合の戻り値 : true
-        bool TrySetVariableValue_Inner(Type type, string variableName, object value, bool locally, bool downstairAccess = false) {
+        bool TrySetVariableValue_Inner(Type type, string variableName, object value, bool locally, bool downstairAccess) {
             if (currentFloorNo == -1) return false;
 
             Dictionary<string, object> variables = null;
@@ -180,16 +186,24 @@ namespace CommonElement.ChainEnvironment_v0_0_1
         }
 
         //削除成功時の戻り値 : true
-        bool TryRemoveVariable_Inner(Type type, string variableName, bool downstairAccess = false) {
+        bool TryRemoveVariable_Inner(Type type, string variableName, bool downstairAccess) {
             if (currentFloorNo == -1) return false;
 
             if (!currentFloor.ContainsKey(type) ||
                 !currentFloor[type].ContainsKey(variableName)) return false;
             return currentFloor[type].Remove(variableName);
         }
+        bool TryRemoveVariableAll_Inner(bool downstairAccess) {
+            currentFloor = new Dictionary<Type, Dictionary<string, object>>();
+            FloorDatas.Clear();
+            FloorDatas.Add(currentFloor);
+            currentFloorNo = 0;
+
+            return true;
+        }
 
         //削除成功時の戻り値 : true
-        bool TryExistsVariable_Inner(Type type, string variableName, bool downstairAccess = false) {
+        bool TryExistsVariable_Inner(Type type, string variableName, bool downstairAccess) {
             if (currentFloorNo == -1) return false;
 
             return currentFloor.ContainsKey(type) && currentFloor[type].ContainsKey(variableName);
