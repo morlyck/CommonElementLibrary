@@ -120,7 +120,7 @@ namespace CommonElement.ChainEnvironment_v0_0_1
 
         //削除成功時の戻り値 : true
         public bool Exists(Type type, string variableName) {
-            return TryExistsVariable_Inner(type, variableName, false);
+            return ExistsVariable_Inner(type, variableName, false);
         }
 
 
@@ -203,10 +203,12 @@ namespace CommonElement.ChainEnvironment_v0_0_1
         }
 
         //削除成功時の戻り値 : true
-        bool TryExistsVariable_Inner(Type type, string variableName, bool downstairAccess) {
+        bool ExistsVariable_Inner(Type type, string variableName, bool locally) {
             if (currentFloorNo == -1) return false;
 
-            return currentFloor.ContainsKey(type) && currentFloor[type].ContainsKey(variableName);
+            var result = currentFloor.ContainsKey(type) && currentFloor[type].ContainsKey(variableName);
+            if (locally || UpstairEnvironment == null) return result;
+             return result || UpstairEnvironment.Exists(type, variableName);
         }
         #endregion
 
@@ -221,7 +223,7 @@ namespace CommonElement.ChainEnvironment_v0_0_1
             return TrySetVariableValue_Inner(type, variableName, value, true, true);
         }
         bool IUpstairChain.Exists(Type type, string variableName) {
-            return TryExistsVariable_Inner(type, variableName, true);
+            return ExistsVariable_Inner(type, variableName, false);
         }
         bool IUpstairChain.Remove(Type type, string variableName) {
             return TryRemoveVariable_Inner(type, variableName, true);
