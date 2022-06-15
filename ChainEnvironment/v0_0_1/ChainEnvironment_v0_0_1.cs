@@ -112,10 +112,10 @@ namespace CommonElement.ChainEnvironment_v0_0_1
 
         //削除成功時の戻り値 : true
         public bool Remove(Type type, string variableName) {
-            return TryRemoveVariable_Inner(type, variableName, false);
+            return RemoveVariable_Inner(type, variableName);
         }
         public bool RemoveAll() {
-            return TryRemoveVariableAll_Inner(false);
+            return RemoveVariableAll_Inner();
         }
 
         //削除成功時の戻り値 : true
@@ -154,6 +154,9 @@ namespace CommonElement.ChainEnvironment_v0_0_1
         #region(Inner)
         //有効な値が取得できた場合の戻り値 : true
         bool TryGetVariableValue_Inner(Type type, string variableName, out object value, bool downstairAccess) {
+            if(!ExistsVariable_Inner(type, variableName, true)) return UpstairEnvironment.TryGetValue(type, variableName, out value);
+
+            //ローカルの値を返す
             if (currentFloorNo == -1 ||
                 !currentFloor.ContainsKey(type) ||
                 !currentFloor[type].ContainsKey(variableName)) {
@@ -186,19 +189,20 @@ namespace CommonElement.ChainEnvironment_v0_0_1
         }
 
         //削除成功時の戻り値 : true
-        bool TryRemoveVariable_Inner(Type type, string variableName, bool downstairAccess) {
+        bool RemoveVariable_Inner(Type type, string variableName) {
             if (currentFloorNo == -1) return false;
 
             if (!currentFloor.ContainsKey(type) ||
                 !currentFloor[type].ContainsKey(variableName)) return false;
             return currentFloor[type].Remove(variableName);
         }
-        bool TryRemoveVariableAll_Inner(bool downstairAccess) {
+        bool RemoveVariableAll_Inner() {
             currentFloor = new Dictionary<Type, Dictionary<string, object>>();
             FloorDatas.Clear();
             FloorDatas.Add(currentFloor);
             currentFloorNo = 0;
 
+            if (UpstairEnvironment != null) UpstairEnvironment.RemoveAll();
             return true;
         }
 
@@ -226,7 +230,7 @@ namespace CommonElement.ChainEnvironment_v0_0_1
             return ExistsVariable_Inner(type, variableName, false);
         }
         bool IUpstairChain.Remove(Type type, string variableName) {
-            return TryRemoveVariable_Inner(type, variableName, true);
+            return RemoveVariable_Inner(type, variableName);
         }
         bool IUpstairChain.RemoveAll() {
             return RemoveAll();
