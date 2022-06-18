@@ -152,6 +152,8 @@ namespace CommonElement.ChainEnvironment_v0_0_1
         #endregion
 
         #region(Inner)
+        //各種機能の実装
+
         //有効な値が取得できた場合の戻り値 : true
         bool TryGetVariableValue_Inner(Type type, string variableName, out object value, bool downstairAccess) {
             if(!ExistsVariable_Inner(type, variableName, true)) return UpstairEnvironment.TryGetValue(type, variableName, out value);
@@ -217,6 +219,7 @@ namespace CommonElement.ChainEnvironment_v0_0_1
         #endregion
 
         #region(from downstair)
+        //下の環境からアクセスしてきたときの処理
         bool IUpstairChain.TryGetValue(Type type, string variableName, out object value) {
             return TryGetVariableValue_Inner(type, variableName, out value, true);
         }
